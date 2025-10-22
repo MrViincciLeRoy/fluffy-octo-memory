@@ -2,7 +2,7 @@ services:
   - type: web
     name: erpnext
     env: docker
-    dockerfilePath: ./Dockerfile
+    sourceDir: /
     repo: https://github.com/frappe/frappe_docker.git
     region: oregon
     plan: free
@@ -13,21 +13,3 @@ services:
         value: yourcompany.onrender.com
       - key: ADMIN_PASSWORD
         value: admin123
-    disks:
-      - name: db_data
-        mountPath: /var/lib/mysql
-        sizeGB: 10
-      - name: sites
-        mountPath: /home/frappe/frappe-bench/sites
-        sizeGB: 5
-      - name: redis_data
-        mountPath: /data
-        sizeGB: 1
-
-  - type: redis
-    name: redis
-    region: oregon
-
-  - type: pgsql
-    name: postgres
-    region: oregon
