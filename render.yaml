@@ -2,8 +2,6 @@ services:
   - type: web
     name: erpnext
     env: docker
-    sourceDir: /
-    repo: https://github.com/frappe/frappe_docker.git
     region: oregon
     plan: free
     envVars:
