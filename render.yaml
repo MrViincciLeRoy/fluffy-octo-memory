@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: erpnext
+    env: docker
+    dockerfilePath: ./Dockerfile
+    repo: https://github.com/frappe/frappe_docker.git
+    region: oregon
+    plan: free
+    envVars:
+      - key: DB_PASSWORD
+        generateValue: true
+      - key: SITE_NAME
+        value: yourcompany.onrender.com
+      - key: ADMIN_PASSWORD
+        value: admin123
+    disks:
+      - name: db_data
+        mountPath: /var/lib/mysql
+        sizeGB: 10
+      - name: sites
+        mountPath: /home/frappe/frappe-bench/sites
+        sizeGB: 5
+      - name: redis_data
+        mountPath: /data
+        sizeGB: 1
+    postDeployCommand: |
+      docker exec -it erpnext bash -c "
+        cd frappe-bench &&
+        bench new-site $SITE_NAME --admin-password $ADMIN_PASSWORD --db-root-password $DB_PASSWORD &&
+        bench --site $SITE_NAME install-app erpnext &&
+        echo '$SITE_NAME' > sites/current_site.txt &&
+        exit
+      "
+
+  - type: redis
+    name: redis
+    region: oregon
+    plan: free
